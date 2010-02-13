@@ -1,0 +1,21 @@
+<html>
+<body>
+<h1>account_signup_confirm</h1>
+<form method="post" action="/account/signup/end">
+  <table border="0">
+    <tr>
+      <td>userid</td>
+      <td><%=h params[:account]%><input type="hidden" name="account" value="<%=h params[:account]%>"></td>
+    </tr>
+    <tr>
+      <td>password</td>
+      <td><i>nondisplay</i><input type="hidden" name="password" value="<%=h params[:password]%>"></td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="hidden" name="token" value="<%=h @token%>">
+      <input type="submit" value="signup"></td>
+    </tr>
+  </table>
+</form>
+</body>
+</html>

@@ -1,0 +1,100 @@
+= sinatra-session-authentication
+
+Sinatra上でsessionを使用して動く、ユーザー認証ヘルパーです。
+前提としては、すべてのページがhttpsです。
+httpでも利用可能ですが、sessionを1つしか使用していないため、セキュリティが低下します。
+Session部分は、別プロジェクトの rack-session-sequel を使用していますが、
+基本的には Rack::Session::Abstract::ID を継承したものであれば、差し替え可能です。
+
+
+==Migration
+
+  require 'rubygems'
+  require 'sequel'
+  require 'sequel/extensions/migration'
+  
+  class CreateSessions < Sequel::Migration
+    def up
+      create_table :sessions do
+        primary_key :id
+        String :sid, :unique => true,  :null => false
+        text :session
+        DateTime :update_at
+      end
+    end
+    def down
+      self << 'drop table sessions'
+    end
+  end
+  
+  class CreateUsers < Sequel::Migration
+    def up
+      create_table :user do
+        primary_key :id
+        String :account, :unique => true,  :null => false
+        String :password, :null => false
+      end
+    end
+    def down
+      self << 'drop table user'
+    end
+  end
+
+==簡単なSample
+
+  #!/usr/local/bin/ruby
+  # -*- coding: UTF-8 -*-
+  
+  require 'rubygems'
+  require 'sinatra'
+  require 'sequel'
+  require 'erb'
+  require 'lib/rack-session-sequel'
+  require 'lib/sinatra-session-auth'
+  
+  DB = Sequel.sqlite
+  use Rack::Session::Sequel , :dataset => DB[:sessions]
+  
+  get '/' do
+    @account = 'guest'
+    @account = session[:user][:account] if session[:user]
+    erb <<EOS
+  <h1>index</h1>
+  hello <%=h @account%>.<br>
+  <hr>
+  <a href="/useronly">useronly</a><br>
+  <a href="/everyone">everyone</a><br>
+  <a href="/account/login">login</a><br>
+  <a href="/account/signup">signup</a><br>
+  <% if session[:user] %>
+  <a href="/account/<%=e session[:id]%>">show accunt</a><br>
+  <a href="/account/<%=e session[:id]%>/edit">edit accunt</a><br>
+  <a href="/account/<%=e session[:id]%>/delete">delete accunt</a><br>
+  <a href="/account/logout">logout</a><br>
+  <% end %>
+  EOS
+  end
+  
+  get '/loginuseronly' do
+    #ログインユーザ用のページ
+    login_required
+    @account = session[:user][:account]
+    erb <<EOS
+  <h1>for useronly</h1>
+  hello <%=h @account%>.<br>
+  <br>
+  EOS
+  end
+  
+  get '/everyone' do
+    #誰でも見れるページ
+    @account = 'guest'
+    @account = session[:user][:account] if session[:user]
+    erb <<EOS
+  <h1>for everyone</h1>
+  hello <%=h @account%>.<br>
+  <br>
+  EOS
+  end
+
+

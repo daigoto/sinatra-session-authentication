@@ -1,0 +1,24 @@
+<html>
+<body>
+<h1>account_edit</h1>
+<form method="post" action="/account/<%=e session[:id] %>/edit/confirm">
+  <table border="0">
+    <tr>
+      <td>password_old</td>
+      <td><input type="password" size="30" name="password_old" AUTOCOMPLETE="OFF"></td>
+    </tr>
+    <tr>
+      <td>password_new</td>
+      <td><input type="password" size="30" name="password" AUTOCOMPLETE="OFF"></td>
+    </tr>
+    <tr>
+      <td>password_new(confirm)</td>
+      <td><input type="password" size="30" name="password_confirm" AUTOCOMPLETE="OFF"></td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" value="confirm"></td>
+    </tr>
+  </table>
+</form>
+</body>
+</html>

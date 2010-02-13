@@ -1,0 +1,10 @@
+<html>
+<body>
+<h1>account_delete_confirm</h1>
+<form method="post" action="/account/<%=e session[:id] %>/delete/end">
+  <input type="hidden" name="token" value="<%=h @token%>">
+  <input type="submit" value="unregister">
+</form>
+</body>
+</html>
+

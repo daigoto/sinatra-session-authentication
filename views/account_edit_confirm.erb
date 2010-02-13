@@ -1,0 +1,16 @@
+<html>
+<body>
+<h1>account_edit</h1>
+<form method="post" action="/account/<%=e session[:id] %>/edit/end">
+  <table border="0">
+      <td>password_new</td>
+      <td><i>nondisplay</i><input type="hidden" name="password" value="<%=h params[:password]%>"></td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="hidden" name="token" value="<%=h @token%>">
+      <input type="submit" value="edit"></td>
+    </tr>
+  </table>
+</form>
+</body>
+</html>
